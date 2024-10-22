@@ -1,0 +1,14 @@
+steps:
+  # build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--tag=gcr.io/$PROJECT_ID/bayesian_public_goods_game:$COMMIT_SHA",
+        "--tag=gcr.io/$PROJECT_ID/bayesian_public_goods_game:latest",
+        "--file=./docker/Dockerfile",
+        ".",
+      ]
+  # push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/bayesian_public_goods_game:latest"]
