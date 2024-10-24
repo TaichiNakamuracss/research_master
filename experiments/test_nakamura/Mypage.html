@@ -1,0 +1,30 @@
+{{ block title }}
+投資意思決定
+{{ endblock }}
+
+{{ block content }}
+<p>
+    1グループ{{ C.PLAYERS_PER_GROUP }}人の公共財ゲームです。<br>
+    各プレイヤーは貢献するかしないかを決定します。<br>
+</p>
+
+<p>
+    あなたの選好パラメータ（τ）は: 
+    <strong>
+        {{ tau }}  <!-- プレイヤーの選好パラメータを表示 -->
+    </strong> です。<br>
+
+    便益関数の結果は: 
+    <strong>
+        {{ benefit }}  <!-- グループの便益関数の結果を表示 -->
+    </strong> です。
+</p>
+
+{{ formfields }}
+{{ next_button }}
+
+{{ endblock }}
+
+
+
+

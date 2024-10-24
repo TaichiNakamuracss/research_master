@@ -1,12 +1,14 @@
 from os import environ
 
+
 SESSION_CONFIGS = [
+    
     dict(
-        name='survey',
-        display_name='survey',
-        num_demo_participants=1,
-        app_sequence=['survey', 'payment_info'],
-    ),
+        name='test_nakamura',
+        display_name='Test_namkamura',
+        num_demo_participants=3,
+        app_sequence=['test_nakamura']
+    )# ここをいじる
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
@@ -43,6 +45,7 @@ DEMO_PAGE_INTRO_HTML = """
 Here are some oTree games.
 """
 
-SECRET_KEY = '{{ secret_key }}'
+SECRET_KEY = environ.get('OTREE_SECRET_KEY', 'my_default_secret_key')
 
-INSTALLED_APPS = ['otree']
+
+INSTALLED_APPS = ['otree', 'test_nakamura']
