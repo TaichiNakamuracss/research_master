@@ -1,0 +1,38 @@
+{% extends "global/Page.html" %}
+
+{% block title %}
+    ゲームイントロダクション
+{% endblock %}
+
+{% block content %}
+    <h2>公共財ゲームへようこそ</h2>
+
+    <p>
+        このゲームでは、あなたと他の2人のプレイヤーが一緒に参加します。各ラウンドで、あなたは公共財に貢献するかどうかを選択します。
+        ゲームは全部で{{ num_rounds }}ラウンド行われます。
+    </p>
+
+    <h3>効用関数</h3>
+    <p>
+        あなたの利得は次の効用関数に基づいて計算されます:
+    </p>
+    <p>
+        貢献する場合：<strong>{{ utility_function_1|safe }}</strong>
+    </p>
+    <p>
+        貢献しない場合：<strong>{{ utility_function_2|safe }}</strong>
+    </p>
+    <h3>ゲームのルール</h3>
+    <ul>
+        <li>各プレイヤーは、それぞれの選好パラメータ <strong>τ<sub>i</sub></strong> が与えられます。</li>
+        <li>各ラウンドで、公共財に <strong>貢献する</strong> か <strong>貢献しない</strong> かを選びます。</li>
+        <li>貢献する場合、コストは{{ C.CONTRIBUTION_COST }}です。</li>
+        <li>便益は、公共財への合計貢献額に基づいて計算され、効用関数を通じて各プレイヤーの最終利得に影響します。</li>
+    </ul>
+
+    <p>
+        公共財に貢献するかどうかは、あなたの利益を最大化するための選択に依存します。
+    </p>
+
+    {% next_button %}
+{% endblock %}
