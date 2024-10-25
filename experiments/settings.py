@@ -8,7 +8,8 @@ SESSION_CONFIGS = [
         display_name='Test_namkamura',
         num_demo_participants=3,
         app_sequence=['test_nakamura']
-    )# ここをいじる
+    ),# ここをいじる
+    
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
