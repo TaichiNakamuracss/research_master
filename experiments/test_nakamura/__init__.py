@@ -87,9 +87,13 @@ class Mypage(Page):
         round_number = self.subsession.round_number
         shift = 1 + 1 * round_number  # シフト値は1
         benefit_function = f"ρ(x) = 100 / (1 + exp(-(x - {shift})))"
+        x_values = list(range(0, 11))  # 0から10までの範囲
+        y_values = [100 / (1 + math.exp(-(x - shift))) for x in x_values]
         return {
             'player_tau': self.tau,
             'benefit_function': benefit_function,
+            'x_values': x_values,  # x軸データ
+            'y_values': y_values,  # y軸データ
         }
 
 
