@@ -1,5 +1,6 @@
 from otree.api import *
 import math
+import random  # ランダムモジュールを追加
 
 doc = """
 公共財ゲーム - 各プレイヤーに選好パラメータ τi をランダムに割り当てます。初期保有はありません。
@@ -9,23 +10,17 @@ class C(BaseConstants):
     NAME_IN_URL = 'my_public_goods'
     PLAYERS_PER_GROUP = 3  # プレイヤー数を3に設定
     NUM_ROUNDS = 5  # ゲームは5回繰り返される
-    MULTIPLIER = 2
     BENEFIT_FUNCTION = 100  # 便益関数の定数部分
     CONTRIBUTION_COST = 20  # 貢献する場合のコストc
 
 
 class Subsession(BaseSubsession):
-    def creating_session(self):
-        import random
-        for player in self.get_players():
-            player.tau = random.choice([1, 2, 3])
-            print(f"Player {player.id_in_group} has tau = {player.tau}")  # デバッグ用のログ
-
+    pass
 
 class Group(BaseGroup):
     total_contribution = models.IntegerField()
     benefit = models.FloatField()
-
+    
 
 class Player(BasePlayer):
     contribution = models.BooleanField(
@@ -35,7 +30,11 @@ class Player(BasePlayer):
         ],
         doc="プレイヤーが公共財に貢献するかどうか"
     )
-    tau = models.IntegerField(doc="プレイヤーの公共財への選好 (τ)", initial=1)
+    tau = models.FloatField(initial=cu(0))
+
+    def set_tau(player):
+        player.tau += random.randint(1, 3)
+
     final_payoff = models.FloatField(doc="プレイヤーの最終的な利得")
 
     def set_payoffs(self):
@@ -44,7 +43,7 @@ class Player(BasePlayer):
         self.group.total_contribution = total_contribution
         # benefit_functionを現在のラウンドに基づいて呼び出す
         benefit = self.benefit_function(total_contribution, self.subsession.round_number)
-        self.group.benefit = benefit
+        self.group.benefit = benefit / C.PLAYERS_PER_GROUP
 
         for p in players:
             if p.contribution == 1:
@@ -74,6 +73,10 @@ class Introduction(Page):
                            "公共財に貢献するか否かを選択します。ゲームは5ラウンド続きます。"
         }
 
+class PlayerWaitPage(WaitPage):
+    def after_all_players_arrive(self):
+        for player in self.group.get_players():
+            player.set_tau()
 
 class Mypage(Page):
     form_model = 'player'
@@ -100,14 +103,14 @@ class Results(Page):
     def vars_for_template(self):
         return {
             'total_contribution': self.group.total_contribution,
-            'benefit': self.group.benefit,
             'player_tau': self.tau,
             'final_payoff': self.final_payoff,
         }
 
 
 # ページシーケンスにIntroductionページを追加
-page_sequence = [Introduction, Mypage, ResultsWaitPage, Results]
+page_sequence = [Introduction, PlayerWaitPage, Mypage, ResultsWaitPage, Results]
+
 
 
 
