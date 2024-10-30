@@ -1,0 +1,16 @@
+{{ block title }}
+結果
+{{ endblock }}
+
+{{ block content }}
+<p>
+    あなたは{{ player.contribution }}投資しました。
+    全投資額は{{ group.total_contribution }}でした。
+    よって、あなたの利得は{{ player.final_payoff }}となります。
+</p>
+
+
+{{ next_button }}
+{{ endblock }}
+
+

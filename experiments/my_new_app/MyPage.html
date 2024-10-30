@@ -1,0 +1,78 @@
+{{ block title }}
+投資意思決定
+{{ endblock }}
+
+{{ block content }}
+<p>
+    1グループ{{ C.PLAYERS_PER_GROUP }}人の公共財ゲームです。<br>
+    各プレイヤーは貢献するかしないかを決定します。<br>
+</p>
+
+<p>
+    あなたの選好パラメータ（τ）は: 
+    <strong>
+        {{ player_tau }}  <!-- プレイヤーの選好パラメータを表示 -->
+    </strong> です。<br>
+
+    便益関数は: 
+    <strong>
+        {{ benefit_function }}  <!-- グループの便益関数の結果を表示 -->
+    </strong> です。
+    
+   
+    <h4>参加者の τ 値</h4>
+    <table border="1" style="border-collapse: collapse;">
+        <tr>
+            <th style="border-right: 1px solid black;">参加者ID</th>
+            <th>τ値</th>
+        </tr>
+        {% for player_info in all_players_info %}
+        <tr>
+            <td style="border-right: 1px solid black;">参加者 {{ player_info.id }}</td>
+            <td>{{ player_info.tau }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+   
+</p>
+
+<p>便益関数の外形</p>
+    <p>{{ benefit_function }}</p>
+    
+    <canvas id="benefitChart" width="300" height="300"></canvas> <!-- 小さいサイズに設定 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        const xValues = {{ x_values|safe }};
+        const yValues = {{ y_values|safe }};
+    
+        const ctx = document.getElementById('benefitChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: xValues,
+                datasets: [{
+                    label: '便益関数 ρ(x)',
+                    data: yValues,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: false,  // レスポンシブ設定を無効にする
+                maintainAspectRatio: false,  // アスペクト比の維持を無効化
+                scales: {
+                    x: { title: { display: true, text: '貢献人数 (x)' }},
+                    y: { title: { display: true, text: '便益 ρ(x)' }}
+                }
+            }
+        });
+    </script>
+    
+{{ formfields }}
+{{ next_button }}
+
+{{ endblock }}
+

@@ -9,7 +9,12 @@ SESSION_CONFIGS = [
         num_demo_participants=3,
         app_sequence=['test_nakamura']
     ),# ここをいじる
-    
+    dict(
+        name='my_new_app',
+        display_name='My_New_App',
+        num_demo_participants=3,
+        app_sequence=['my_new_app']
+    ),# ここをいじる
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
