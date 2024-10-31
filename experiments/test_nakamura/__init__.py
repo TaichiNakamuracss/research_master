@@ -8,7 +8,7 @@ doc = """
 
 class C(BaseConstants):
     NAME_IN_URL = 'my_public_goods'
-    PLAYERS_PER_GROUP = 3  # プレイヤー数を3に設定
+    PLAYERS_PER_GROUP = 5  # プレイヤー数を3に設定
     NUM_ROUNDS = 5  # ゲームは5回繰り返される
     BENEFIT_FUNCTION = 100  # 便益関数の定数部分
     CONTRIBUTION_COST = 20  # 貢献する場合のコストc
@@ -47,9 +47,10 @@ class Player(BasePlayer):
 
         for p in players:
             if p.contribution == 1:
-                p.final_payoff = p.tau * benefit - C.CONTRIBUTION_COST
+                p.final_payoff = round(p.tau * benefit - C.CONTRIBUTION_COST, 1)
             else:
-                p.final_payoff = p.tau * benefit
+                p.final_payoff = round(p.tau * benefit, 1)
+
 
     # ラウンドに応じたシフトを適用 (シフト値は1)
     def benefit_function(self, x, round_number):
@@ -62,8 +63,9 @@ class Introduction(Page):
 
     def vars_for_template(self):
         # 効用関数の説明を二行に分ける
-        utility_function_1 = "ui(si, s−i) = τi * ρ(ng(s, s−i)) − c (si = s)"
-        utility_function_2 = "ui(ϕ, s−i) = τi * ρ(ng(ϕ, s−i)) (si = ϕ)"
+        utility_function_1 = "u<sub>i</sub>(s<sub>i</sub>, s<sub>−i</sub>) = τ<sub>i</sub>  ρ(n<sub>g</sub>(s, s<sub>−i</sub>)) − c"
+        utility_function_2 = "u<sub>i</sub>(ϕ, s<sub>−i</sub>) = τ<sub>i</sub>  ρ(n<sub>g</sub>(ϕ, s<sub>−i</sub>))"
+        
         
         return {
             'num_rounds': C.NUM_ROUNDS,

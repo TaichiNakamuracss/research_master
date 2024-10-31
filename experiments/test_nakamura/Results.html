@@ -4,11 +4,18 @@
 
 {{ block content }}
 <p>
-    あなたは{{ player.contribution }}投資しました。
+    あなたは
+    {% if player.contribution == 1 %}
+        投資しました。
+    {% else %}
+        投資しませんでした。
+    {% endif %}
+</p>
+<p>
     全投資額は{{ group.total_contribution }}でした。
     よって、あなたの利得は{{ player.final_payoff }}となります。
 </p>
 
-
 {{ next_button }}
 {{ endblock }}
+

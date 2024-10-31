@@ -6,7 +6,7 @@ SESSION_CONFIGS = [
     dict(
         name='test_nakamura',
         display_name='Test_namkamura',
-        num_demo_participants=3,
+        num_demo_participants=5,
         app_sequence=['test_nakamura']
     ),# ここをいじる
     dict(
