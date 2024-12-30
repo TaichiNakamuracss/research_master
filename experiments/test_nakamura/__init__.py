@@ -43,36 +43,28 @@ class Player(BasePlayer):
         self.group.total_contribution = total_contribution
         # benefit_functionを現在のラウンドに基づいて呼び出す
         benefit = self.benefit_function(total_contribution, self.subsession.round_number)
-        self.group.benefit = benefit / C.PLAYERS_PER_GROUP
+        self.group.benefit = benefit
 
         for p in players:
             if p.contribution == 1:
-                p.final_payoff = round(p.tau * benefit - C.CONTRIBUTION_COST, 1)
+                p.final_payoff = round(p.tau * benefit - C.CONTRIBUTION_COST, 0)
             else:
-                p.final_payoff = round(p.tau * benefit, 1)
+                p.final_payoff = round(p.tau * benefit, 0)
 
 
     # ラウンドに応じたシフトを適用 (シフト値は1)
     def benefit_function(self, x, round_number):
-        shift = 1 + 1 * round_number  # シフト値をラウンドごとに1ずつ増加
+        shift = -3 + 1 * round_number  # シフト値をラウンドごとに1ずつ増加
         return 100 / (1 + math.exp(-(x - shift)))
 
 
 class Introduction(Page):
     """ゲームのルールを説明するイントロダクションページ"""
 
-    def vars_for_template(self):
-        # 効用関数の説明を二行に分ける
-        utility_function_1 = "u<sub>i</sub>(s<sub>i</sub>, s<sub>−i</sub>) = τ<sub>i</sub>  ρ(n<sub>g</sub>(s, s<sub>−i</sub>)) − c"
-        utility_function_2 = "u<sub>i</sub>(ϕ, s<sub>−i</sub>) = τ<sub>i</sub>  ρ(n<sub>g</sub>(ϕ, s<sub>−i</sub>))"
-        
-        
+    def vars_for_template(self):      
         return {
             'num_rounds': C.NUM_ROUNDS,
-            'utility_function_1': utility_function_1,
-            'utility_function_2': utility_function_2,
-            'description': "各プレイヤーは、自身の利益を最大化するために、"
-                           "公共財に貢献するか否かを選択します。ゲームは5ラウンド続きます。"
+            'cost': C.CONTRIBUTION_COST,
         }
 
 class PlayerWaitPage(WaitPage):
@@ -87,15 +79,20 @@ class Mypage(Page):
     def vars_for_template(self):
         # 現在のラウンドに基づいて便益関数を表示する
         round_number = self.subsession.round_number
-        shift = 1 + 1 * round_number  # シフト値は1
-        benefit_function = f"ρ(x) = 100 / (1 + exp(-(x - {shift})))"
-        x_values = list(range(0, 11))  # 0から10までの範囲
-        y_values = [100 / (1 + math.exp(-(x - shift))) for x in x_values]
+        shift = -3 + 1 * round_number  # シフト値は1
+        table_data = lambda tau: [
+            {
+                'others_contributions': i,
+                'contribute_benefit': round(tau * (100 / (1 + math.exp(-(i + 1 - shift)))) - C.CONTRIBUTION_COST, 0),
+                'not_contribute_benefit': round(tau * (100 / (1 + math.exp(-(i - shift)))), 0),
+            }
+            for i in range(C.PLAYERS_PER_GROUP)
+        ]
         return {
             'player_tau': self.tau,
-            'benefit_function': benefit_function,
-            'x_values': x_values,  # x軸データ
-            'y_values': y_values,  # y軸データ
+            'table_data_tau_1': table_data(1),  # τ = 1の場合
+            'table_data_tau_2': table_data(2),  # τ = 2の場合
+            'table_data_tau_3': table_data(3),  # τ = 3の場合
         }
 
 

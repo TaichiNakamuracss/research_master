@@ -12,7 +12,7 @@ SESSION_CONFIGS = [
     dict(
         name='my_new_app',
         display_name='My_New_App',
-        num_demo_participants=3,
+        num_demo_participants=5,
         app_sequence=['my_new_app']
     ),# ここをいじる
 ]

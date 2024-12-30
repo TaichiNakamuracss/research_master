@@ -5,7 +5,8 @@
 {{ block content }}
 <p>
     1グループ{{ C.PLAYERS_PER_GROUP }}人の公共財ゲームです。<br>
-    各プレイヤーは貢献するかしないかを決定します。<br>
+    各プレイヤーは表を参考にしながら貢献するかしないかを決定してください。<br>
+    選好パラメータ（τ）は等確率で割り当てられます。<br>
 </p>
 
 <p>
@@ -13,53 +14,76 @@
     <strong>
         {{ player_tau }}  <!-- プレイヤーの選好パラメータを表示 -->
     </strong> です。<br>
-
-    便益関数は: 
-    <strong>
-        {{ benefit_function }}  <!-- グループの便益関数の結果を表示 -->
-    </strong> です。
-    
-   
 </p>
 
-<p>便益関数の外形</p>
-    
-    <canvas id="benefitChart" width="300" height="300"></canvas> <!-- 小さいサイズに設定 -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script>
-        const xValues = {{ x_values|safe }};
-        const yValues = {{ y_values|safe }};
-    
-        const ctx = document.getElementById('benefitChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: xValues,
-                datasets: [{
-                    label: '便益関数 ρ(x)',
-                    data: yValues,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: false,  // レスポンシブ設定を無効にする
-                maintainAspectRatio: false,  // アスペクト比の維持を無効化
-                scales: {
-                    x: { title: { display: true, text: '貢献人数 (x)' }},
-                    y: { title: { display: true, text: '便益 ρ(x)' }}
-                }
-            }
-        });
-    </script>
-    
+<h3>τ = 1 の場合</h3>
+<table border="1" style="border-collapse: collapse; width: 100%; text-align: center; border: 1px solid black;">
+    <thead>
+        <tr style="border-bottom: 2px solid black;">
+            <th style="border-right: 1px solid black;">他のプレイヤーの貢献人数</th>
+            <th style="border-right: 1px solid black;">貢献する場合の便益</th>
+            <th>貢献しない場合の便益</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_data_tau_1 %}
+        <tr style="border-bottom: 1px solid black;">
+            <td style="border-right: 1px solid black;">{{ row.others_contributions }}</td>
+            <td style="border-right: 1px solid black;">{{ row.contribute_benefit }}</td>
+            <td>{{ row.not_contribute_benefit }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>τ = 2 の場合</h3>
+<table border="1" style="border-collapse: collapse; width: 100%; text-align: center; border: 1px solid black;">
+    <thead>
+        <tr style="border-bottom: 2px solid black;">
+            <th style="border-right: 1px solid black;">他のプレイヤーの貢献人数</th>
+            <th style="border-right: 1px solid black;">貢献する場合の便益</th>
+            <th>貢献しない場合の便益</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_data_tau_2 %}
+        <tr style="border-bottom: 1px solid black;">
+            <td style="border-right: 1px solid black;">{{ row.others_contributions }}</td>
+            <td style="border-right: 1px solid black;">{{ row.contribute_benefit }}</td>
+            <td>{{ row.not_contribute_benefit }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>τ = 3 の場合</h3>
+<table border="1" style="border-collapse: collapse; width: 100%; text-align: center; border: 1px solid black;">
+    <thead>
+        <tr style="border-bottom: 2px solid black;">
+            <th style="border-right: 1px solid black;">他のプレイヤーの貢献人数</th>
+            <th style="border-right: 1px solid black;">貢献する場合の便益</th>
+            <th>貢献しない場合の便益</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table_data_tau_3 %}
+        <tr style="border-bottom: 1px solid black;">
+            <td style="border-right: 1px solid black;">{{ row.others_contributions }}</td>
+            <td style="border-right: 1px solid black;">{{ row.contribute_benefit }}</td>
+            <td>{{ row.not_contribute_benefit }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {{ formfields }}
 {{ next_button }}
 
 {{ endblock }}
+
+
+
+
 
 
 
