@@ -1,0 +1,20 @@
+{% extends "global/Page.html" %}
+
+{% block content %}
+<h1>最終結果</h1>
+
+<p>ランダムに選ばれたラウンド: {{ random_round }}</p>
+
+<p>そのラウンドでのあなたの結果:</p>
+<ul>
+    <li>最終利得: {{ final_payoff }}</li>
+    <li>あなたの選好パラメータ : {{ player_tau }}</li>
+    <li>変動報酬: {{ dynamic_reward }} 円</li>
+</ul>
+
+<h1>支払い情報</h1>
+<p>固定報酬: {{ fixed_reward }} 円</p>
+<p>変動報酬: {{ dynamic_reward }} 円</p>
+<p><strong>合計報酬: {{ total_reward }} 円</strong></p>
+
+{% endblock %}

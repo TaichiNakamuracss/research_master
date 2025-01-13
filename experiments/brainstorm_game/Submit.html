@@ -1,0 +1,106 @@
+{{ block title }}
+アイデア提出
+{{ endblock }}
+
+{{ block content }}
+<style>
+    table {
+        width: 90%;
+        /* テーブル全体の幅を90%に設定 */
+        margin: 20px auto;
+        /* テーブルを中央揃え */
+        border-collapse: collapse;
+        /* セルの境界線を結合 */
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        /* セルの境界線を設定 */
+        padding: 15px;
+        /* セル内の余白を設定 */
+        text-align: left;
+        /* テキストを左揃えに設定 */
+        vertical-align: middle;
+        /* テキストを上下中央に設定 */
+        white-space: nowrap;
+        /* テキストを折り返さず、1行に設定 */
+    }
+
+    th {
+        background-color: #f2f2f2;
+        /* ヘッダーの背景色を設定 */
+    }
+
+    td {
+        width: 50%;
+        /* 各セルの幅を50%に設定して余白を確保 */
+    }
+</style>
+<p>
+    他のプレイヤーのレポートの結果は以下の通りでした。
+    ただし、<strong>あなたのプレイヤーラベルは{{ player.participant.label }}</strong>です。
+</p>
+<table>
+    <thead>
+        <tr>
+            <th>プレイヤーラベル</th>
+            <th>レポートした承認区間</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ for p in player.group.get_players() }}
+        <tr>
+            <td>{{ p.participant.label }}</td>
+            <td>[{{ p.report_lower }}, {{ p.report_upper }}]</td>
+        </tr>
+        {{ endfor }}
+    </tbody>
+</table>
+
+<p>あなたの持つアイデアは以下の通りです。他プレイヤーのレポートを参考に、提出するアイデアのチェックボックスを全てクリックしてください</p>
+<table>
+    <thead>
+        <tr>
+            <th>チェックボックス</th>
+            <th>あなたが持つアイデア</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for idea in idea_set %}
+        <tr>
+            <td><input type="checkbox" class="idea-checkbox" value="{{ idea }}"></td>
+            <td>{{ idea }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- 非表示フィールドにチェックボックスの内容を保存 -->
+<input type="hidden" id="submit_ideas" name="submit_ideas" value="[]">
+
+<script>
+    const checkboxes = document.querySelectorAll('.idea-checkbox');
+    const hiddenInput = document.getElementById('submit_ideas');
+
+    const updateHiddenInput = () => {
+        // 選択されたアイデアを収集
+        const selectedIdeas = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        // JSON形式の文字列として非表示フィールドに保存
+        hiddenInput.value = JSON.stringify(selectedIdeas);
+    };
+
+    // 初期化時にも非表示フィールドを更新（何も選択されていない場合も空リストを保存）
+    updateHiddenInput();
+
+    // チェックボックスが変更されるたびに非表示フィールドを更新
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateHiddenInput);
+    });
+</script>
+
+{{ next_button }}
+{{ endblock }}

@@ -1,0 +1,83 @@
+{{ block title }}
+ラウンド結果
+{{ endblock }}
+
+{{ block content }}
+<style>
+    table {
+        width: 90%;
+        /* テーブル全体の幅を90%に設定 */
+        margin: 20px auto;
+        /* テーブルを中央揃え */
+        border-collapse: collapse;
+        /* セルの境界線を結合 */
+    }
+
+    th,
+    td {
+        border: 1px solid #000;
+        /* セルの境界線を設定 */
+        padding: 15px;
+        /* セル内の余白を設定 */
+        text-align: left;
+        /* テキストを左揃えに設定 */
+        vertical-align: middle;
+        /* テキストを上下中央に設定 */
+        white-space: nowrap;
+        /* テキストを折り返さず、1行に設定 */
+    }
+
+    th {
+        background-color: #f2f2f2;
+        /* ヘッダーの背景色を設定 */
+    }
+
+    td {
+        width: 50%;
+        /* 各セルの幅を50%に設定して余白を確保 */
+    }
+</style>
+
+<p>
+    このラウンドにおける、あなたのグループのプレイヤーのアイデア出しの結果は以下の通りでした。
+</p>
+<table>
+    <thead>
+        <tr>
+            <th>プレイヤーラベル</th>
+            <th>レポートした承認範囲</th>
+            <th>真の承認範囲</th>
+            <th>全てのアイデア</th>
+            <th>提出したアイデア</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ for p in player.group.get_players() }}
+        <tr>
+            <td>{{ p.participant.label }}</td>
+            <td>[{{ p.report_lower }}, {{ p.report_upper }}]</td>
+            <td>[{{ p.accept_idea_lower }}, {{ p.accept_idea_upper }}]</td>
+            <td>{{ p.idea_set }}</td>
+            <td>{{ p.submit_ideas }}</td>
+        </tr>
+        {{ endfor }}
+    </tbody>
+</table>
+<p>
+    また、利得の計算式は以下の通りでした。
+</p>
+<table border="1">
+    <tr>
+        <th>報酬</th>
+    </tr>
+    <tr>
+        <td>{{ C.ACCEPT_UTILITY }} × あなたの提出したアイデアそれぞれを承認したプレイヤーの人数 - {{ C.SUBMIT_COST }} × あなたが提出したアイデアの数</td>
+    </tr>
+</table>
+<p>
+    あなたのプレイヤーラベルは{{ player.participant.label }}です。
+</p>
+<p>よってこのラウンドでのあなたの報酬は<strong>{{ player.payoff }}</strong>でした。</p>
+
+{{ next_button }}
+{{ endblock }}
